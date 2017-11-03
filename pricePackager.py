@@ -20,15 +20,15 @@ def calculateMarkup(basePrice, numberOfPeople, itemType):
     
     #start calculations
     #uncomment print statements for more accurate information
-    print("Base Price:     %.2f"% basePrice)
-    print("Flat Markup:    5% =","%.4f"% (float(basePrice*0.05))) 
+    #print("Base Price:     %.2f"% basePrice)
+    #print("Flat Markup:    5% =","%.4f"% (float(basePrice*0.05))) 
     subtotal = float(basePrice*1.05)
-    print("Subtotal:       %.4f"% subtotal)
+    #print("Subtotal:       %.4f"% subtotal)
     
     numberOfPeople = int(numberOfPeople[0:-7])
     peopleMarkup = float(0.012 * numberOfPeople)
     peopleSubtotal = float(peopleMarkup * subtotal)
-    print("Person Markup:  %d"% numberOfPeople, "* 1.2% =","%.1f = %.6f"% (peopleMarkup * 100, peopleSubtotal))
+    #print("Person Markup:  %d"% numberOfPeople, "* 1.2% =","%.1f"%(peopleMarkup*100),"%", "= %.6f"% peopleSubtotal)
     
     typeMarkup = 0.0
 
@@ -39,13 +39,19 @@ def calculateMarkup(basePrice, numberOfPeople, itemType):
     elif (itemType.lower() == "electronic"):
         typeMarkup = 0.02
     typeSubtotal = float(typeMarkup * subtotal)
-    #print("Type Markup:   %.1f" % (typeMarkup * 100), "%" , " = %.6f" % float(typeMarkup * subtotal))
+
+    #if (typeMarkup == 0.0):
+    #    print('Type Markup:    0')
+    #else:
+    #    print("Type Markup:    %.1f" % (typeMarkup * 100), "%" , " = %.6f" % typeSubtotal)
 
     total=subtotal + typeSubtotal + peopleSubtotal
-    print("Total:          %.6f" % total)
-    round(total, 2)
-    return (total)
+    #print("Total:          %.6f" % total)
+    total = round(total, 2)
+    return total
 
 
-
-print(calculateMarkup(1299.99,"3 people", "food"))
+#testing 
+#print(calculateMarkup(1299.99,"3 people", "food"))
+#print(calculateMarkup(5432.00,"1 person", "pharmaceutical"))
+#print(calculateMarkup(12456.95,"4 people", "books"))
