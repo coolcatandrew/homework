@@ -19,11 +19,12 @@ def calculateMarkup(basePrice, numberOfPeople, itemType):
         return -1
     
     subtotal = float(basePrice*1.05)
-    
     print(subtotal)
     
-    peopleMarkup = 0
-
+    numberOfPeople = int(numberOfPeople[0:-7])
+    peopleMarkup = 0.012 * numberOfPeople
+    print(numberOfPeople)
+    print(peopleMarkup * subtotal)
     
     typeMarkup = 0.00
 
@@ -36,4 +37,10 @@ def calculateMarkup(basePrice, numberOfPeople, itemType):
 
     print(typeMarkup * subtotal)
 
-calculateMarkup(1299.99,"3 people", "food")
+
+
+
+
+
+
+print(calculateMarkup(1299.99,"3 people", "food"))
