@@ -1,57 +1,82 @@
-#homework from Kira Talent
-#Andrew Li
-#create a library to help take existing products, repackaging them for sale at electronics stores
+"""
+homework from Kira Talent
+Andrew Li
+create a library to help take existing products, repackaging them for sale at electronics stores
+"""
+class PricePackager:
+    __itemMarkup = 0.0 #no markup initially
+    __baseMarkup = 1.05 #5% base markup
+    __peopleMarkup = 0.0 #no markup initially
+    __markupPerPerson = 0.012 #1.2% markup per person working on product
+    __numberOfPeople = "0 people"
+    __itemType = ""
+    __basePrice = 0.00
+    __subTotal = 0.0
+    __totalPrice = 0.0
 
-#function to take in the base item price, the number of people who need to work on the item, and the item type and return a float as the final price after the markup
-#returns -1 after printing error if occurs
-#params: 
-#    float basePrice,
-#    string numberOfPeople (n followed by people, eg 0 people, 1 person, 2 people, etc)
-#    string itemType
-def calculateMarkup(basePrice, numberOfPeople, itemType):
-    #validate input
-    if (not isinstance(basePrice, float)):
-        print("error - basePrice is not a float")
-        return -1
+    __markups = {"electronic": 0.02, #2% markup for electronic
+                 "food":0.13, #13% markup for food
+                 "pharmaceutical": 0.075} #7.5% markup for pharmaceuticals
+
+    """
+    Constructor to take in the base item price, the number of people who need to work on the item, and the item type and prints a float as the final price after the markup
+    Params:
+        float basePrice,
+        string numberOfPeople (n followed by people, eg 0 people, 1 person, 2 people, etc)
+        string itemType
+    """ 
+    def  __init__(self, basePrice, numberOfPeople, itemType):
+        validInput = False
+        if self.validateFloat(basePrice) and self.validateNumberOfPeople(numberOfPeople):
+            validInput = True
+        if (validInput):
+            self.__basePrice = basePrice
+            self.__numberOfPeople = numberOfPeople
+            self.__itemType = itemType
+            self.__subTotal = basePrice * self.__baseMarkup
+            self.__itemMarkup = self.getItemMarkup() + self.getItemMarkupFromItemType(itemType)
+            self.__peopleMarkup = self.getPeopleMarkup() + self.getPeopleMarkupFromNumberOfPeople(numberOfPeople)
+            self.__total = self.calculateTotal(self.__subTotal, self.__peopleMarkup, self.__itemMarkup)
+            print(round(self.__total,2))
+        else:
+            print("Invalid input - Cannot calculate price markup")
+            
+
+    def validateFloat(self, floatToCheck):
+        if (not isinstance(floatToCheck, float)):
+            print("error - basePrice is not a float")
+            return False
+        return True
+            
+    def validateNumberOfPeople(self, numberOfPeople):
+        if (not numberOfPeople[0:-7].isdigit()):
+            print("error - please enter the number of people needed in the format (# people)")
+            return False
+        return True
+
+    def getItemMarkup(self):
+        return self.__itemMarkup
+
+    def getPeopleMarkup(self):
+        return self.__peopleMarkup
+
+    def getMarkupDict(self):
+        return self.__markups
+
+    def getItemMarkupFromItemType(self, itemType):
+        markupDicts = self.getMarkupDict()
+        for key in markupDicts.keys():
+            if itemType.lower() == key:
+                return markupDicts[key]
+            return 0
+
+    def getPeopleMarkupFromNumberOfPeople(self, numberOfPeopleString):
+        numberOfPeople = int(numberOfPeopleString[0:-7])
+        return numberOfPeople * self.__markupPerPerson
+
+    def calculateTotal(self, subTotal, personMarkup, itemMarkup):
+        personSubtotal = subTotal * personMarkup
+        itemSubtotal = subTotal * itemMarkup
+        return subTotal + personSubtotal + itemSubtotal
     
-    if (not numberOfPeople[0:-7].isdigit()):
-        print("error - please enter the number of people needed in the format (# people)")
-        return -1
-    
-    #start calculations
-    #uncomment print statements for more accurate information
-    #print("Base Price:     %.2f"% basePrice)
-    #print("Flat Markup:    5% =","%.4f"% (float(basePrice*0.05))) 
-    subtotal = float(basePrice*1.05)
-    #print("Subtotal:       %.4f"% subtotal)
-    
-    numberOfPeople = int(numberOfPeople[0:-7])
-    peopleMarkup = float(0.012 * numberOfPeople)
-    peopleSubtotal = float(peopleMarkup * subtotal)
-    #print("Person Markup:  %d"% numberOfPeople, "* 1.2% =","%.1f"%(peopleMarkup*100),"%", "= %.6f"% peopleSubtotal)
-    
-    typeMarkup = 0.0
 
-    if (itemType.lower() == "pharmaceutical"):
-        typeMarkup = 0.075
-    elif (itemType.lower() == "food"):
-        typeMarkup = 0.13
-    elif (itemType.lower() == "electronic"):
-        typeMarkup = 0.02
-    typeSubtotal = float(typeMarkup * subtotal)
-
-    #if (typeMarkup == 0.0):
-    #    print('Type Markup:    0')
-    #else:
-    #    print("Type Markup:    %.1f" % (typeMarkup * 100), "%" , " = %.6f" % typeSubtotal)
-
-    total=subtotal + typeSubtotal + peopleSubtotal
-    #print("Total:          %.6f" % total)
-    total = round(total, 2)
-    return total
-
-
-#testing 
-#print(calculateMarkup(1299.99,"3 people", "food"))
-#print(calculateMarkup(5432.00,"1 person", "pharmaceutical"))
-#print(calculateMarkup(12456.95,"4 people", "books"))
